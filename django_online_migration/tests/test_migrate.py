@@ -27,9 +27,6 @@ from django_online_migration.migrate import (
 )
 
 
-RUNNING_WITH_MYSQL = True
-
-
 ORIGIN_TABLE_SQL = (
     """
     CREATE TABLE `campaign` (
@@ -297,10 +294,10 @@ class TestMigrations(TestCase):
     def test_delete_triggers(self):
         "Test deleting triggers"
         self._init()
-        res = execute("default", "SHOW TRIGGERS FROM test")
+        res = execute("default", "SHOW TRIGGERS FROM test_test")
         self.assertEquals(len(res), 3)
         delete_triggers("default", self.table_name)
-        res = execute("default", "SHOW TRIGGERS FROM test")
+        res = execute("default", "SHOW TRIGGERS FROM test_test")
         self.assertEquals(len(res), 0)
 
     def test_select_limit(self):
