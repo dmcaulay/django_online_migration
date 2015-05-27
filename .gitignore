@@ -1,0 +1,10 @@
+*.py[cod]
+.DS_Store
+
+# Packages
+*.egg-info
+build
+
+# build & test artifacts
+/env
+/test_project
