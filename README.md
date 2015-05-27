@@ -1,10 +1,10 @@
 # Django Online Migration
 
-The Django Online Migration project performs MySQL table migrations while your Django application is live without locking the table. It accomplishes this with a table copy and triggers similar to [github.com/soundcloud/lhm](https://github.com/soundcloud/lhm).
+The Django Online Migration project performs MySQL table migrations without locking the table. It accomplishes this with a table copy and triggers similar to [github.com/soundcloud/lhm](https://github.com/soundcloud/lhm).
 
 ## Project Status
 
-This project is currently in Beta mode and is currently being tested in production environments.
+This project is currently in Beta mode and is being tested in production environments.
 
 ## Requirements
 
@@ -12,14 +12,14 @@ Django Online Migration only works with MySQL and currently requires a Django da
 
 ## Limitations
 
-The Django Online Migration tool works best with an auto incremented primary key. If your primary key not auto incremented and not sorted by insertion order your database might end up in an inconsistent state.
+The Django Online Migration tool works best with an auto incremented primary key. If your primary key is not auto incremented and not sorted by insertion order your database may end up in an inconsistent state ([see](https://github.com/dmcaulay/django_online_migration/blob/master/django_online_migration/migrate.py#L226)).
 
 ## Usage
 
 Django Online Migration adds an `online_migration` management command to Django that can be used to apply individual migrations. The migrations live in the project's `online_migrations` directory and look similar to the following example:
 
 ```py
-from facebook_analytics_service.utils.migrations import (
+from django_online_migration.migrate import (
     change_table,
     finish_migration,
     restart_copy,
@@ -118,16 +118,16 @@ def rename(**kwargs):
     finish_migration("default", "campaign")
 ```
 
-The migration above implements three different functions: `run`, `restart` and `rename`. These functions map to the three possible commands executed by the django management command.
+The migration above implements three functions: `run`, `restart` and `rename`. These functions map to the three possible commands executed by the Django management command.
 
 ### run
 
 The `run` command is used to start the migration. It executes the following steps:
-* Creates the destination table use `DEST_TABLE_SQL`
+* Creates the destination table using `DEST_TABLE_SQL`
 * Creates the indexes using `DEST_INDEXES`
-* Creates  insert, update and delete triggers to keep the tables in sync during the copy
-* Starts the copy from the original table to the destination table
-  * `ORIGIN_COLUMNS`, `DEST_COLUMNS` and `RENAMES` are used to map original columns to new columns during the copy.
+* Creates  insert, update and delete triggers to keep the tables in sync during the table copy
+* Starts the table copy from the original table to the destination table
+  * `ORIGIN_COLUMNS`, `DEST_COLUMNS` and `RENAMES` are used to map original columns to new columns during the table copy.
 
 To exeucte the run command for migration `0001_campaign` you run the following:
 
@@ -137,7 +137,7 @@ $ ./manage.py online_migration <app_name> run 0001_campaign
 
 ### restart
 
-The `restart` command is used to restart the copy if anything goes wrong during the `run` command. The `restart` command allows you to pass in a start id and a limit id so you can start where you left off. You can find these ids by reviewing the logs of the failed copy. 
+The `restart` command is used to restart the table copy if anything goes wrong during the `run` command. The `restart` command allows you to pass in a start id and a limit id so you can start where you left off. You can find these ids by reviewing the log of the failed copy (the log defaults to `stdout`). 
 
 To exeucte the restart command for migration `0001_campaign` you run the following:
 
@@ -147,7 +147,7 @@ $ ./manage.py online_migration <app_name> restart 0001_campaign --start=1000 --l
 
 ### rename
 
-Once the copy completes the migration is finished with an atomic rename. This is accomplished with the `rename` command it should be done in place of the standard Django migration.
+The migration is finished with an atomic rename. This is accomplished with the `rename` command. You should run this command when you deploy your updated source code instead of running the standard Django migration.
 
 To exeucte the rename command for migration `0001_campaign` you run the following:
 
@@ -157,7 +157,7 @@ $ ./manage.py online_migration <app_name> rename 0001_campaign
 
 ## Notes
 
-The first iteration of this tool has a somewhat crude interface that will be cleaned up in future releases. It was originally inspired by (github.com/soundcloud/lhm)[https://github.com/soundcloud/lhm] and plans to work seamlessly with Django migrations similar to the way lhm works with ActiveRecord and Rails migrations.
+The first iteration of this tool has a somewhat crude interface that will be cleaned up in future releases. It was originally inspired by [github.com/soundcloud/lhm](https://github.com/soundcloud/lhm) and the intention is to work seamlessly with Django migrations similar to the way lhm works with ActiveRecord and Rails migrations.
 
 ## TODO
 
