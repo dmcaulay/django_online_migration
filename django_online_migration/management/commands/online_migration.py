@@ -29,6 +29,7 @@ class Command(BaseCommand):
         make_option("--start", action="store", type="int", dest="start", help="The start id for copying to the migration table"),
         make_option("--limit", action="store", type="int", dest="limit", help="The limit id for copying to the migration table"),
         make_option("--chunk_size", action="store", type="int", dest="chunk_size", help="The number of rows to copy for each chunk"),
+        make_option("--throttle", action="store", type="float", dest="throttle", help="The number of seconds to sleep between each chunk"),
     )
 
     def handle(self, *args, **options):

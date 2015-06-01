@@ -161,7 +161,6 @@ The first iteration of this tool has a somewhat crude interface that will be cle
 
 ## TODO
 
-* Add throttling to the table copy function
 * Add a trigger to prevent deletes when the user isn't using auto incrementing primary keys
   * http://stackoverflow.com/questions/14319950/trigger-to-prevent-delete-on-table
 * Add a simple interface similar to Django migrations that allows developers to add/rename/drop columns and add indexes.
