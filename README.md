@@ -168,4 +168,7 @@ The first iteration of this tool has a somewhat crude interface that will be cle
   * Track all add/rename/drop calls
   * Build the change_table inputs
 * Generate the migration automagically.
+* Update README.md
+  * Clarify the inputs to `change_table`
+  * Show an example using `CREATE TABLE LIKE` with `ALTER TABLE`
 
